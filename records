@@ -1,0 +1,93 @@
+-- table-based records
+DECLARE
+  doctors_rec doctors%ROWTYPE;
+  mcenters_rec medical_center%ROWTYPE;
+BEGIN
+  SELECT doctor_name, specialty, mcenter_id, mcenter_name from doctors join medical_center on(doctors.mcenter_id=medical_center.mcenter_id) where lower(doctor_name) like '%{some input, Aru}%';
+  var_name doctors.doctor_name%TYPE := doctors_rec.doctor_name;
+  var_specialty doctors.doctor_name%TYPE := doctors_rec.specialty;
+  var_mcenter_id medical_center.mcenter_id%TYPE := mcenters_rec.mcenter_id;
+  var_mcenter_name medical_center.mcenter_name%TYPE := mcenters_rec.mcenter_name;
+END;
+------------------------------------------------------------------------------------------------------------------
+-- table-based records (contact numbers)
+DECLARE
+  doctors_rec doctors%ROWTYPE;
+  mcenters_rec medical_center%ROWTYPE;
+BEGIN
+  SELECT doctor_name, specialty, mcenter_id, mcenter_name from doctors join medical_center on(doctors.mcenter_id=medical_center.mcenter_id) where lower(doctor_name) like '%{some input, Aru}%';
+  var_name doctors.doctor_name%TYPE := doctors_rec.doctor_name;
+  var_specialty doctors.doctor_name%TYPE := doctors_rec.specialty;
+  var_mcenter_id medical_center.mcenter_id%TYPE := mcenters_rec.mcenter_id;
+  var_mcenter_name medical_center.mcenter_name%TYPE := mcenters_rec.mcenter_name;
+END;
+------------------------------------------------------------------------------------------------------------------
+-- cursor-based records (covid_centers.php)
+DECLARE
+  var_mcenter_id medical_center.mcenter_id%TYPE;
+  var_mcenter_name medical_center.mcenter_name%TYPE;
+  var_mcenter_city medical_center.city%TYPE;
+  var_mcenter_contacts medical_center.contacts%TYPE;
+  
+  CURSOR list_mcenters_cur IS
+    SELECT * FROM medical_center;
+  list_mcenters_rec list_mcenters_cur%ROWTYPE;
+BEGIN
+  OPEN list_mcenters_cur;
+  loop
+    FETCH list_mcenters_cur INTO list_mcenters_rec;
+    EXIT WHEN list_mcenters_cur%NOTFOUND;
+    var_mcenter_id := list_mcenters_rec.mcenter_id;
+    var_mcenter_name := list_mcenters_rec.mcenter_name;
+    var_mcenter_city := list_mcenters_rec.city;
+    var_mcenter_address medical_center.address%TYPE := list_mcenters_rec.address;
+    var_mcenter_contacts := list_mcenters_rec.contacts;
+  end loop;
+END;
+
+---------------------------------------------------------------------------------------------------------------
+CREATE OR REPLACE PROCEDURE get_list_mcenters IS 
+  var_mcenter_id medical_center.mcenter_id%TYPE;
+  var_mcenter_name medical_center.mcenter_name%TYPE;
+  var_mcenter_city medical_center.city%TYPE;
+  var_mcenter_address medical_center.address%TYPE;
+  var_mcenter_contacts medical_center.contacts%TYPE;
+  
+  CURSOR list_mcenters_cur IS
+    SELECT * FROM medical_center;
+  list_mcenters_rec list_mcenters_cur%ROWTYPE;
+BEGIN  
+     OPEN list_mcenters_cur;
+  loop
+    FETCH list_mcenters_cur INTO list_mcenters_rec;
+    EXIT WHEN list_mcenters_cur%NOTFOUND;
+    var_mcenter_id := list_mcenters_rec.mcenter_id;
+    var_mcenter_name := list_mcenters_rec.mcenter_name;
+    var_mcenter_city := list_mcenters_rec.city;
+    var_mcenter_address := list_mcenters_rec.address;
+    var_mcenter_contacts := list_mcenters_rec.contacts;
+  end loop;
+END get_list_mcenters; 
+
+-- -----------------------------------------------------------------------------we have admin with new updates
+CREATE OR REPLACE PROCEDURE findPhones AS
+  CURSOR phones IS
+    SELECT * FROM eco_users;
+  v_row   eco_users%ROWTYPE;
+  v_phones SYS.ODCIVARCHAR2LIST := SYS.ODCIVARCHAR2LIST(); //встроенная функция эррейя
+  v_count INT := 0;
+ BEGIN
+  OPEN phones;
+  LOOP
+    FETCH phones INTO v_row;
+    EXIT WHEN phones%NOTFOUND;
+    v_phones.EXTEND;
+    v_phones(v_phones.COUNT) := v_row.contact_number;
+    FOR i IN 1 .. v_row.contact_number.COUNT LOOP
+      v_phones.EXTEND;
+      v_phones(v_phones.COUNT) := v_row.contact_number(i);
+    END LOOP;
+  END LOOP;
+  CLOSE phones;
+END;
+------------------------------------------------------------------------------------------------------------------
