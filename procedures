@@ -1,6 +1,6 @@
 -----------------------------------------------------------------------------------------------regex for checking email format
-ALTER TABLE users add constraint email_check check(regexp_like(email, '.+@.+\..+'));
-ALTER TABLE eco_users add constraint email_check check(regexp_like(email, '.+@.+\..+'));
+ALTER TABLE users add constraint email_check CHECK(regexp_like(email, '.+@.+\..+'));
+ALTER TABLE eco_users add constraint email_check CHECK(regexp_like(email, '.+@.+\..+'));
 -----------------------------------------------------------------------------------------------inserting new user (registration)
 CREATE OR REPLACE PROCEDURE insertUser
   (v_user_uid IN NUMBER,
@@ -26,8 +26,8 @@ END;
 -----------------------------------------------------------------------------------------------drop existing sequence
 CREATE OR REPLACE PROCEDURE reset_sequence(sequence IN VARCHAR2, value NUMBER) IS
   BEGIN
-    execute immediate 'DROP SEQUENCE ' || sequence;
-    execute immediate 'CREATE SEQUENCE ' || sequence || ' start with ' || value || ' INCREMENT BY 1 START WITH 1 MINVALUE 1 MAXVALUE 1000 CYCLE CACHE 2';
+    EXECUTE IMMEDIATE 'DROP SEQUENCE ' || sequence;
+    EXECUTE IMMEDIATE 'CREATE SEQUENCE ' || sequence || ' start with ' || value || ' INCREMENT BY 1 START WITH 1 MINVALUE 1 MAXVALUE 1000 CYCLE CACHE 2';
   END;
 -----------------------------------------------------------------------------------------------delete user from all tables
 Suppose, we have to delete user with id = 10123
