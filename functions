@@ -2,8 +2,8 @@ CREATE OR REPLACE FUNCTION usersAutoCommit
    RETURN number
 IS
    n_count NUMBER;
-   cursor c1 is
-   SELECT COUNT(*)
+   CURSOR c1 IS
+   SELECT user_uid
      FROM eco_users
      WHERE email IS NOT NULL;
 BEGIN
