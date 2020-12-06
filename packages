@@ -13,7 +13,7 @@ CREATE OR REPLACE PACKAGE user_manipulations IS
 END user_manipulations;
 
 -- package body
-CREATE OR REPLACE PACKAGE BODY emp_admin IS
+CREATE OR REPLACE PACKAGE BODY user_manipulations IS
 PROCEDURE DELETE_FROM_TABLES (arg_user_uid IN NUMBER) AS
   v_user_uid NUMBER(38);
   v_consultation_id NUMBER(5);
@@ -56,3 +56,148 @@ PROCEDURE insertUser
         v_image);
   END;
 END user_manipulations;
+-------------------------------------------------------------------------------------------------------------------
+-- autoCommiting after each 10000
+CREATE OR REPLACE PACKAGE user_commit IS
+  FUNCTION usersAutoCommit RETURN number;
+END user_commit;
+
+CREATE OR REPLACE PACKAGE BODY user_commit IS
+    FUNCTION usersAutoCommit RETURN number IS
+     n_count NUMBER;
+     CURSOR c1 IS
+      SELECT user_uid FROM eco_users WHERE email IS NOT NULL;
+  BEGIN
+     OPEN c1;
+     FETCH c1 INTO n_count;
+     IF c1%notfound THEN
+        n_count := 9999;
+     END IF;
+     CLOSE c1;
+     COMMIT;
+  RETURN n_count;
+  EXCEPTION
+  WHEN OTHERS THEN
+     raise_application_error(-20001,'An error was encountered - '||SQLCODE||' -ERROR- '||SQLERRM);
+  END;
+END user_commit;
+---------------------------------------------------------------------------------------------------------------------
+-- select distinct users
+CREATE OR REPLACE PACKAGE BODY DISTINCTUSERS AS
+    CURSOR CUR IS SELECT DISTINCT email FROM eco_users where email = $email ;
+    PROCEDURE distinctUser(p_email IN OUT VARCHAR2) IS
+      IF NOT CUR%ISOPEN THEN
+        OPEN CUR;
+      END IF;
+        FETCH CUR INTO p_email;
+        IF CUR%NOTFOUND THEN
+          CLOSE CUR; EXIT;
+        END IF;
+    END distinctUser;
+  END DISTINCTUSERS;
+----------------------------------------------------------------------------------------------------------------------
+-- includes procedures which affects to consultation
+-- package declaration
+CREATE OR REPLACE PACKAGE consultation_manipulations IS
+  CREATE OR REPLACE PROCEDURE insert_consultation
+  (v_consultation_id IN NUMBER,
+   v_user_uid IN NUMBER,
+   v_doctor_id IN NUMBER,
+   v_first_name IN VARCHAR2,
+   v_last_name IN VARCHAR2,
+   v_age NUMBER,
+   v_phone VARCHAR2,
+   v_city VARCHAR2,
+   v_doctor_name VARCHAR2,
+   v_clinics VARCHAR2,
+   v_consultation_date IN VARCHAR2);
+END consultation_manipulations;
+
+-- package body
+CREATE OR REPLACE PACKAGE BODY consultation_manipulations IS
+PROCEDURE insert_consultation
+  (v_consultation_id IN NUMBER,
+   v_user_uid IN NUMBER,
+   v_doctor_id IN NUMBER,
+   v_first_name IN VARCHAR2,
+   v_last_name IN VARCHAR2,
+   v_age NUMBER,
+   v_phone VARCHAR2,
+   v_city VARCHAR2,
+   v_doctor_name VARCHAR2,
+   v_clinics VARCHAR2,
+   v_consultation_date IN VARCHAR2) IS
+BEGIN
+    INSERT INTO online_consultation (
+     consultation_id,
+     user_uid,
+     doctor_id,
+     first_name,
+     last_name,
+     age,
+     phone,
+     city,
+     doctor_name,
+     clinics,
+     consultation_date)
+    VALUES(
+       v_consultation_id,
+       v_user_uid,
+       v_doctor_id,
+       v_first_name,
+       v_last_name,
+       v_age,
+       v_phone,
+       v_city,
+       v_doctor_name,
+       v_clinics,
+       v_consultation_date);
+END;
+END CONSULTATION_manipulations;
+----------------------------------------------------------------------------------------------------------------
+-- includes procedures which affects to pcr
+-- package declaration
+CREATE OR REPLACE PACKAGE pcr_manipulations IS
+  PROCEDURE insert_pcr
+  (v_pcr_id IN NUMBER,
+   v_center_id IN NUMBER,
+   v_user_uid IN NUMBER,
+   v_first_name IN VARCHAR2,
+   v_last_name IN VARCHAR2,
+   v_city VARCHAR2,
+   v_punkt VARCHAR2,
+   v_pcr_date VARCHAR2)
+END pcr_manipulations;
+
+-- package body
+CREATE OR REPLACE PACKAGE BODY pcr_manipulations IS
+PROCEDURE insert_pcr
+  (v_pcr_id IN NUMBER,
+   v_center_id IN NUMBER,
+   v_user_uid IN NUMBER,
+   v_first_name IN VARCHAR2,
+   v_last_name IN VARCHAR2,
+   v_city VARCHAR2,
+   v_punkt VARCHAR2,
+   v_pcr_date VARCHAR2) IS
+BEGIN
+    INSERT INTO online_pcr (
+     pcr_id,
+     center_id,
+     user_uid,
+     first_name,
+     last_name,
+     city,
+     punkt,
+     pcr_date)
+    VALUES(
+     v_pcr_id,
+     v_center_id,
+     v_user_uid,
+     v_first_name,
+     v_last_name,
+     v_city,
+     v_punkt,
+     v_pcr_date);
+END;
+END pcr_manipulations;
