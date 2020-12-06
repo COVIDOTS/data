@@ -53,3 +53,72 @@ BEGIN
     END LOOP;
   CLOSE delete_user_data;
 END;
+-----------------------------------------------------------------------------------------------
+CREATE OR REPLACE PROCEDURE insert_consultation
+  (v_consultation_id IN NUMBER,
+   v_user_uid IN NUMBER,
+   v_doctor_id IN NUMBER,
+   v_first_name IN VARCHAR2,
+   v_last_name IN VARCHAR2,
+   v_age NUMBER,
+   v_phone VARCHAR2,
+   v_city VARCHAR2,
+   v_doctor_name VARCHAR2,
+   v_clinics VARCHAR2,
+   v_consultation_date IN VARCHAR2) IS
+BEGIN
+    INSERT INTO online_consultation (
+     consultation_id,
+     user_uid,
+     doctor_id,
+     first_name,
+     last_name,
+     age,
+     phone,
+     city,
+     doctor_name,
+     clinics,
+     consultation_date)
+    VALUES(
+       v_consultation_id,
+       v_user_uid,
+       v_doctor_id,
+       v_first_name,
+       v_last_name,
+       v_age,
+       v_phone,
+       v_city,
+       v_doctor_name,
+       v_clinics,
+       v_consultation_date);
+END;
+------------------------------------------------------------------------------------------------------
+CREATE OR REPLACE PROCEDURE insert_pcr
+  (v_pcr_id IN NUMBER,
+   v_center_id IN NUMBER,
+   v_user_uid IN NUMBER,
+   v_first_name IN VARCHAR2,
+   v_last_name IN VARCHAR2,
+   v_city VARCHAR2,
+   v_punkt VARCHAR2,
+   v_pcr_date VARCHAR2) IS
+BEGIN
+    INSERT INTO online_pcr (
+     pcr_id,
+     center_id,
+     user_uid,
+     first_name,
+     last_name,
+     city,
+     punkt,
+     pcr_date)
+    VALUES(
+     v_pcr_id,
+     v_center_id,
+     v_user_uid,
+     v_first_name,
+     v_last_name,
+     v_city,
+     v_punkt,
+     v_pcr_date);
+END;
