@@ -144,7 +144,7 @@ BEGIN
                      NEW_CLINICS, 
                      OLD_DATE,
                      NEW_DATE, ACTION, ACTIONAUTHOR)
-        VALUES (:OLD.user_uid, SYSDATE, :OLD.consultation_id, :NEW.consultation_id, :OLD.user_uid, :NEW.user_uid, :OLD.doctor_id, :NEW.doctor_id, :OLD.clinics, :NEW.clinincs, :OLD.consultation_date, :NEW.consultation_date,'Delete',(SELECT USER FROM DUAL));
+        VALUES (:OLD.user_uid, SYSDATE, :OLD.consultation_id, :NEW.consultation_id, :OLD.user_uid, :NEW.user_uid, :OLD.doctor_id, :NEW.doctor_id, :OLD.clinics, :NEW.clinics, :OLD.consultation_date, :NEW.consultation_date,'Delete',(SELECT USER FROM DUAL));
     END IF;
     IF INSERTING THEN 
         INSERT INTO online_consultation_log (ID, OPERATION_DATE, OLD_CID, 
@@ -157,7 +157,7 @@ BEGIN
                      NEW_CLINICS, 
                      OLD_DATE,
                      NEW_DATE, ACTION, ACTIONAUTHOR)
-        VALUES (:OLD.user_uid, SYSDATE, :OLD.consultation_id, :NEW.consultation_id, :OLD.user_uid, :NEW.user_uid, :OLD.doctor_id, :NEW.doctor_id, :OLD.clinics, :NEW.clinincs, :OLD.consultation_date, :NEW.consultation_date,'Insert',(SELECT USER FROM DUAL));
+        VALUES (:OLD.user_uid, SYSDATE, :OLD.consultation_id, :NEW.consultation_id, :OLD.user_uid, :NEW.user_uid, :OLD.doctor_id, :NEW.doctor_id, :OLD.clinics, :NEW.clinics, :OLD.consultation_date, :NEW.consultation_date,'Insert',(SELECT USER FROM DUAL));
     END IF;
     IF UPDATING THEN 
         INSERT INTO online_consultation_log (ID, OPERATION_DATE, OLD_CID, 
@@ -170,6 +170,6 @@ BEGIN
                      NEW_CLINICS, 
                      OLD_DATE,
                      NEW_DATE, ACTION, ACTIONAUTHOR)
-        VALUES (:OLD.user_uid, SYSDATE, :OLD.consultation_id, :NEW.consultation_id, :OLD.user_uid, :NEW.user_uid, :OLD.doctor_id, :NEW.doctor_id, :OLD.clinics, :NEW.clinincs, :OLD.consultation_date, :NEW.consultation_date,'Update',(SELECT USER FROM DUAL));
+        VALUES (:OLD.user_uid, SYSDATE, :OLD.consultation_id, :NEW.consultation_id, :OLD.user_uid, :NEW.user_uid, :OLD.doctor_id, :NEW.doctor_id, :OLD.clinics, :NEW.clinics, :OLD.consultation_date, :NEW.consultation_date,'Update',(SELECT USER FROM DUAL));
     END IF;
 END;
