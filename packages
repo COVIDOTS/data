@@ -99,17 +99,17 @@ CREATE OR REPLACE PACKAGE BODY DISTINCTUSERS AS
 -- includes procedures which affects to consultation
 -- package declaration
 CREATE OR REPLACE PACKAGE consultation_manipulations IS
-  CREATE OR REPLACE PROCEDURE insert_consultation
+PROCEDURE insert_consultation
   (v_consultation_id IN NUMBER,
    v_user_uid IN NUMBER,
    v_doctor_id IN NUMBER,
    v_first_name IN VARCHAR2,
    v_last_name IN VARCHAR2,
-   v_age NUMBER,
-   v_phone VARCHAR2,
-   v_city VARCHAR2,
-   v_doctor_name VARCHAR2,
-   v_clinics VARCHAR2,
+   v_age in NUMBER,
+   v_phone IN VARCHAR2,
+   v_city IN VARCHAR2,
+   v_doctor_name IN VARCHAR2,
+   v_clinics IN VARCHAR2,
    v_consultation_date IN VARCHAR2);
 END consultation_manipulations;
 
@@ -121,11 +121,11 @@ PROCEDURE insert_consultation
    v_doctor_id IN NUMBER,
    v_first_name IN VARCHAR2,
    v_last_name IN VARCHAR2,
-   v_age NUMBER,
-   v_phone VARCHAR2,
-   v_city VARCHAR2,
-   v_doctor_name VARCHAR2,
-   v_clinics VARCHAR2,
+   v_age in NUMBER,
+   v_phone IN VARCHAR2,
+   v_city IN VARCHAR2,
+   v_doctor_name IN VARCHAR2,
+   v_clinics IN VARCHAR2,
    v_consultation_date IN VARCHAR2) IS
 BEGIN
     INSERT INTO online_consultation (
@@ -137,7 +137,7 @@ BEGIN
      age,
      phone,
      city,
-     doctor_name,
+     doctor,
      clinics,
      consultation_date)
     VALUES(
@@ -164,9 +164,9 @@ CREATE OR REPLACE PACKAGE pcr_manipulations IS
    v_user_uid IN NUMBER,
    v_first_name IN VARCHAR2,
    v_last_name IN VARCHAR2,
-   v_city VARCHAR2,
-   v_punkt VARCHAR2,
-   v_pcr_date VARCHAR2)
+   v_city IN VARCHAR2,
+   v_punkt IN VARCHAR2,
+   v_pcr_date IN VARCHAR2);
 END pcr_manipulations;
 
 -- package body
@@ -177,9 +177,9 @@ PROCEDURE insert_pcr
    v_user_uid IN NUMBER,
    v_first_name IN VARCHAR2,
    v_last_name IN VARCHAR2,
-   v_city VARCHAR2,
-   v_punkt VARCHAR2,
-   v_pcr_date VARCHAR2) IS
+   v_city IN VARCHAR2,
+   v_punkt IN VARCHAR2,
+   v_pcr_date IN VARCHAR2) IS
 BEGIN
     INSERT INTO online_pcr (
      pcr_id,
